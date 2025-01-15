@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg mb-3 p-2 border-bottom">
+    <div class="container-fluid d-flex justify-content-start">
+      <a class="navbar-brand" href="#">
+        <img src="../../../assets/logo.ico" alt="Logo" height="60" class="d-inline-block align-text-top">
+      </a>
+      <p class="mb-0 fs-6 header-title"> {{texto}} </p>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Menu hamburguesa -->
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav pe-3 position-absolute bottom-25 end-0">
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="/vigentes">Llamados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/resultados">Resultados</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Ingresar al Sistema
+            </a>
+            <div class="dropdown-menu">
+              <form class="px-4 py-3">
+                <div class="mb-3">
+                  <label for="exampleDropdownFormEmail1" class="form-label">Usuario</label>
+                  <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="Usuario">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleDropdownFormPassword1" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="********">
+                </div>
+                <div class="mb-3">
+                </div>
+                <button type="submit" class="btn w-100">Ingresar</button>
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
