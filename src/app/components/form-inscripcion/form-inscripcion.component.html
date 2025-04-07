@@ -1,1 +1,133 @@
-<p>form-inscripcion works!</p>
+<h3 class="main-title">Formulario de inscripción para: {{ asignaturaSeleccionada }}</h3>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- DATOS PERSONALES -->
+    <div class="card mb-4">
+      <h5 class="card-header fs-6">Datos Personales</h5>
+      <div class="card-body row mx-3">
+        <div class="col-md-3 mb-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="nombre" placeholder="" formControlName="nombre">
+            <label for="nombre" class="col-form-label-sm">Nombre</label>
+          </div>
+        </div>
+  
+        <div class="col-md-3 mb-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="apellido" placeholder="" formControlName="apellido">
+            <label for="apellido" class="col-form-label-sm">Apellido</label>
+          </div>
+        </div>
+  
+        <div class="col-md-3 mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="tipoDocumento" formControlName="tipo_documento">
+              <option value="">Seleccione una opción</option>
+              <option value="DNI">DNI</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="Libreta Civica">Libreta Civica</option>
+              <option value="Libreta de Enrolamiento">Libreta de Enrolamiento</option>
+            </select>
+            <label for="tipoDocumento" class="col-form-label-sm">Tipo Documento</label>
+          </div>
+        </div>
+  
+        <div class="col-md-3 mb-3">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="documento" placeholder="" formControlName="documento">
+            <label for="documento" class="col-form-label-sm">N° Documento</label>
+          </div>
+        </div>
+  
+        <div class="col-md-6 mb-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="telefono" placeholder="" formControlName="telefono">
+            <label for="telefono" class="col-form-label-sm">Número de teléfono</label>
+          </div>
+        </div>
+  
+        <div class="col-md-6 mb-3">
+          <div class="form-floating">
+            <input type="email" class="form-control" id="correo" placeholder="" formControlName="correo_electronico">
+            <label for="correo" class="col-form-label-sm">Correo Electrónico</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- DATOS ACADÉMICOS -->
+    <div class="card">
+      <h5 class="card-header fs-6">Datos Académicos</h5>
+      <div class="card-body row mx-3">
+        <div class="col-lg-3 mb-3">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="legajo" placeholder="" formControlName="nro_legajo">
+            <label for="legajo" class="col-form-label-sm">N° Legajo</label>
+          </div>
+        </div>
+  
+        <div class="col-lg-6 mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="carrera" formControlName="carrera">
+              <option value="">Seleccione una opción</option>
+              <option value="Ingenieria en Sistemas">Ingeniería en Sistemas</option>
+              <option value="Licenciatura en Administración">Licenciatura en Administración</option>
+              <option value="Licenciatura en Higiene y Seguridad en el Trabajo">Lic. Higiene y Seguridad en el Trabajo</option>
+              <option value="Tecnicatura en Desarrollo Web">Tec. Desarrollo Web</option>
+              <!-- ... agregar las demás opciones -->
+            </select>
+            <label for="carrera" class="col-form-label-sm">Carrera</label>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 mb-3">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="porcentaje" placeholder="" formControlName="porcentaje">
+            <label for="porcentaje" class="col-form-label-sm">Porcentaje Aprobación</label>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="conectividad" formControlName="conectividad">
+              <option value="">Seleccione una opción</option>
+              <option value="Wifi">Wifi</option>
+              <option value="Datos Móviles">Datos Móviles</option>
+              <option value="Ambas">Ambas</option>
+              <option value="Ninguna">Ninguna</option>
+            </select>
+            <label for="conectividad" class="col-form-label-sm">Conectividad</label>
+          </div>
+        </div>
+  
+        <div class="col-lg-5 mb-3">
+          <div class="form-floating">
+            <select class="form-select" id="dispositivo" formControlName="dispositivos">
+              <option value="">Seleccione una opción</option>
+              <option value="Móvil">Dispositivo Móvil</option>
+              <option value="Portátil">Computadora Portátil</option>
+              <option value="PC">PC de escritorio</option>
+              <option value="Ninguna">Ninguna</option>
+            </select>
+            <label for="dispositivo" class="col-form-label-sm">Dispositivos</label>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 mb-3">
+          <label class="form-label d-block col-form-label-sm">¿Beneficiario de Beca?</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" value="true" formControlName="beca" id="becaSi">
+            <label class="form-check-label" for="becaSi">Sí</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" value="false" formControlName="beca" id="becaNo">
+            <label class="form-check-label" for="becaNo">No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="mt-4 text-end mx-3">
+      <button type="submit" class="btn btn-uaco">Enviar Inscripción</button>
+    </div>
+  </form>
+  

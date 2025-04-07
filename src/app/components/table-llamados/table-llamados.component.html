@@ -1,0 +1,71 @@
+<!-- Llamados Vigentes -->
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Llamados Vigentes</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary">Requisitos establecidos en el Art. 7 Ordenanza 069/04 CS-UNPA
+    </h6>
+    <ul>
+      <li>Mantener la condición de Alumno Sistemático</li>
+      <li>Cumplir con el requisito de tener aprobado el 20 % de la carrera que realiza.</li>
+      <li>Tener aprobada la asignatura y cumplir con requisitos específicos de la asignatura según convocatoria
+        publicada en portales institucionales.</li>
+    </ul>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Asignatura</th>
+          <th scope="col">Escuela</th>
+          <th scope="col">Periodo</th>
+          <th scope="col">Fecha Cierre</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        <tr *ngIf="convocatoriasVigentes.length === 0">
+          <td colspan="4" class="text-center">No existen llamados</td>
+        </tr>
+        <tr *ngFor="let convocatoria of convocatoriasVigentes">
+          <td>{{ convocatoria.asignatura }}</td>
+          <td>{{ convocatoria.escuela }}</td>
+          <td>{{ convocatoria.periodo }}</td>
+          <td>{{ convocatoria.cierre }}</td>
+          <td>
+            <a class="btn btn-uaco btn-sm" [routerLink]="['/form-inscripcion']"
+              [queryParams]="{ asignatura: convocatoria.asignatura }">
+              Inscribirme
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Llamados Vencidos -->
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Llamados Vencidos</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Asignatura</th>
+          <th>Escuela</th>
+          <th>Periodo</th>
+          <th>Fecha Cierre</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        <tr *ngIf="convocatoriasVencidas.length === 0">
+          <td colspan="4" class="text-center">No hay llamados vencidos</td>
+        </tr>
+        <tr *ngFor="let convocatoria of convocatoriasVencidas">
+          <td>{{ convocatoria.asignatura }}</td>
+          <td>{{ convocatoria.escuela }}</td>
+          <td>{{ convocatoria.periodo }}</td>
+          <td>{{ convocatoria.cierre }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
