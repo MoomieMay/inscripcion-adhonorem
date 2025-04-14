@@ -4,12 +4,14 @@ import { MainContentComponent } from './components/main-content/main-content.com
 import { TableLlamadosComponent } from './components/table-llamados/table-llamados.component';
 import { TableResultadosComponent } from './components/table-resultados/table-resultados.component';
 import { FormInscripcionComponent } from './components/form-inscripcion/form-inscripcion.component';
+import { TableInscriptosComponent } from './components/table-inscriptos/table-inscriptos.component';
 
 const routes: Routes = [
   { path: '', component: MainContentComponent }, 
   { path: 'llamados', component: TableLlamadosComponent },
   { path: 'resultados', component: TableResultadosComponent },
-  {path: 'form-inscripcion',component: FormInscripcionComponent}
+  {path: 'form-inscripcion',component: FormInscripcionComponent},
+  { path: 'lista-inscriptos', component: TableInscriptosComponent }, // Protegida más adelante
 ];
 
 @NgModule({

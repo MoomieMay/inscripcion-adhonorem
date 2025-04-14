@@ -1,0 +1,12 @@
+.btn-uaco{
+    background-color: #006066;
+    color: white;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+.btn-uaco:hover {
+    background-color: #436a6c;
+  }

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InscripcionesService } from 'src/app/services/inscripciones.service';
-import { supabase } from 'src/app/services/supabase.service';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'FormInscripcionComponent',
@@ -17,7 +16,9 @@ export class FormInscripcionComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private inscripcionesService: InscripcionesService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -51,12 +52,17 @@ export class FormInscripcionComponent implements OnInit {
 
       this.inscripcionesService.crearInscripcion(inscripcion, this.asignaturaSeleccionada)
         .then(respuesta => {
-          alert(`✅ Inscripción exitosa. Nº Transacción: ${respuesta.id}`);
+          this.toastr.success(`✅ Inscripción exitosa. Nº Transacción: ${respuesta.id}`, '¡Éxito!');
           this.form.reset();
+
+          // Redirige luego de 2 segundos
+          setTimeout(() => {
+            this.router.navigate(['/llamados']);
+          }, 2000);
         })
         .catch(error => {
           console.error(error);
-          alert('❌ Error al enviar el formulario');
+          this.toastr.error('❌ Error al enviar el formulario. Intente nuevamente.', 'Error');
         });
 
     } else {

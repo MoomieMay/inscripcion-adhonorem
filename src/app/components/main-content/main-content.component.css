@@ -35,12 +35,8 @@ ul li {
 }
 
 .parallax {
-    background-image: url('../../../assets/parallax.jpg');
+    background-image: url('../../../assets/portada.png');
     height: 300px; /* Podés ajustar la altura */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
     margin-bottom: 20px;
   }
   
