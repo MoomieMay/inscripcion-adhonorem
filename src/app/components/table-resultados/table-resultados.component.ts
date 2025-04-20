@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { InscripcionesService } from 'src/app/services/inscripciones/inscripciones.service';
 import { LlamadosService } from 'src/app/services/llamados/llamados.service';
 
 @Component({
@@ -9,8 +10,12 @@ import { LlamadosService } from 'src/app/services/llamados/llamados.service';
 export class TableResultadosComponent implements OnInit {
   resultados: any[] = [];
   llamadosVencidos: any[] = [];
+  llamadosVencidosFiltrados: any[] = [];
 
-  constructor(private llamadosService: LlamadosService) {}
+  constructor(
+    private inscripcionesService: InscripcionesService,
+    private llamadosService: LlamadosService
+  ) { }
 
   ngOnInit(): void {
     this.cargarLlamados();
@@ -19,39 +24,53 @@ export class TableResultadosComponent implements OnInit {
   async cargarLlamados() {
     try {
       const todos = await this.llamadosService.obtenerTodosLosLlamados();
-      console.log('Todos los llamados:', todos);
       const hoy = new Date();
-
+  
       this.llamadosVencidos = todos.filter(c => new Date(c.cierre_llamado) < hoy);
-
+  
       // Formatear la fecha de los llamados vencidos
       this.llamadosVencidos = this.llamadosVencidos.map((llamado: any) => ({
         ...llamado,
         cierre_llamado: this.formatearFecha(llamado.cierre_llamado),
       }));
-
+  
       this.llamadosVencidos = await Promise.all(
         this.llamadosVencidos.map(async (llamado: any) => {
-          // Usamos el service para traer inscriptos
-          const inscriptos = await this.llamadosService.obtenerInscriptosPorLlamado(llamado.id);
+          // Traemos inscriptos
+          const inscriptos = await this.inscripcionesService.obtenerInscriptosPorLlamado(llamado.id);
+  
+          // Separar los que tienen puntaje y los que no
+          const inscriptosConPuntaje = inscriptos.filter((i: any) => i.puntaje !== null);
   
           return {
             ...llamado,
             inscriptos: inscriptos.map((i: any) => ({
               nombre: i.nombre,
               apellido: i.apellido,
+              puntaje: i.puntaje,
+            })),
+            inscriptosConPuntaje: inscriptosConPuntaje.map((i: any) => ({
+              nombre: i.nombre,
+              apellido: i.apellido,
+              puntaje: i.puntaje,
             })),
           };
         })
       );
   
-      console.log('Llamados vencidos con inscriptos:', this.llamadosVencidos);
-
-      //cachi
+      // AHORA sí filtramos para la tabla:
+      this.llamadosVencidosFiltrados = this.llamadosVencidos.filter(
+        llamado =>
+          llamado.inscriptos.length === 0 || // ✅ Mostrar si NO tiene inscriptos
+          llamado.inscriptosConPuntaje.length > 0 // ✅ Mostrar si hay inscriptos CON puntaje
+      );
+  
     } catch (error) {
-      console.error('Error al cargar los llamados:', error);
+      console.error('Error cargando llamados:', error);
     }
   }
+  
+  
 
   // Método para formatear la fecha en formato DD-MM-AAAA
   private formatearFecha(fecha: string): string {

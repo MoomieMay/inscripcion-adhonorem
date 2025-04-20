@@ -13,28 +13,31 @@
           </tr>
         </thead>
         <tbody class="table-group-divider">
-          <tr *ngIf="llamadosVencidos.length === 0">
-            <td colspan="4" class="text-center">No hay llamados vencidos</td>
+          <tr *ngIf="llamadosVencidosFiltrados.length === 0">
+            <td colspan="5" class="text-center">No hay llamados vencidos</td>
           </tr>
-          <tr *ngFor="let llamado of llamadosVencidos">
+          
+          <tr *ngFor="let llamado of llamadosVencidosFiltrados">
             <td>{{ llamado.nombre_materia }}</td>
             <td>{{ llamado.nombre_escuela }}</td>
             <td>{{ llamado.periodo }}</td>
             <td>{{ llamado.cierre_llamado }}</td>
             <td>
-              <ng-container *ngIf="llamado.inscriptos.length > 0; else sinInscriptos">
+              <ng-container *ngIf="llamado.inscriptosConPuntaje.length > 0; else desierto">
                 <ol>
-                  <li *ngFor="let inscripto of llamado.inscriptos">
+                  <li *ngFor="let inscripto of llamado.inscriptosConPuntaje">
                     {{ inscripto.apellido }} {{ inscripto.nombre }}
                   </li>
                 </ol>
               </ng-container>
-              <ng-template #sinInscriptos>
+              <ng-template #desierto>
                 DESIERTO
               </ng-template>
             </td>
           </tr>
         </tbody>
+        
+        
       </table>
     </div>
   </div>

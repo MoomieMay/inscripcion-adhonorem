@@ -85,6 +85,65 @@ export class InscripcionesService {
     return data || [];
   }
 
+  // Método para guardar resultados
+  async guardarResultado(resultado: any[], id: number) {
+    const { data, error } = await supabase
+      .from('inscripciones')
+      .update({ puntaje: resultado })
+      .eq('id', id)
+      .select(); 
+
+    if (error) {
+      console.error('Error al guardar resultados:', error);
+      throw new Error(error.message);
+    }
+
+    return data;
+  }
+
+  // Método para obtener los inscriptos por llamado (Table Resultados)
+  async obtenerInscriptosPorLlamado(idLlamado: number) {
+    const { data, error } = await supabase
+      .from('inscripciones')
+      .select(`*`)
+      .eq('id_llamado', idLlamado)
+      .order('puntaje', { ascending: false });
+
+    if (error) {
+      console.error('Error al obtener inscriptos:', error);
+      return [];
+    }
+
+    if (!data) return [];
+
+    return data.map((item: any) => ({
+      nombre: item.nombre,
+      apellido: item.apellido,
+      puntaje: item.puntaje,
+    }));
+  }
+
+  // Método para traer inscriptos por llamado, aunque no tengan puntaje (Table Gestion Llamados)
+  async obtenerInscriptosYResultadosPorLlamado(idLlamado: number) {
+    const { data, error } = await supabase
+      .from('inscripciones')
+      .select(`*`)
+      .eq('id_llamado', idLlamado);
+
+    if (error) {
+      console.error('Error al obtener inscriptos y resultados:', error);
+      return [];
+    }
+
+    if (!data) return [];
+
+    return data.map((item: any) => ({
+      id: item.id,         // ID del inscripto (opcional si lo necesitas)
+      nombre: item.nombre,
+      apellido: item.apellido,
+      puntaje: item.puntaje ?? null,       // Puntaje directo, si no hay lo deja como null
+    }));
+  }
 
 
   // PDF

@@ -36,7 +36,7 @@
                         <td>{{ llamado.periodo }}</td>
                         <td>{{ llamado.cierre_llamado }}</td>
                         <td>
-                            <a class="btn btn-warning btn-sm me-2" [routerLink]="['/form-llamado-edit', llamado.id]" 
+                            <a class="btn btn-warning btn-sm me-2" [routerLink]="['/form-llamado-edit', llamado.id]"
                                 [queryParams]="{ asignatura: llamado.nombre_materia }">
                                 Editar
                             </a>
@@ -68,18 +68,42 @@
                 <tr *ngIf="llamadosVencidos.length === 0">
                     <td colspan="4" class="text-center">No hay llamados vencidos</td>
                 </tr>
+                
                 <tr *ngFor="let llamado of llamadosVencidos">
                     <td>{{ llamado.nombre_materia }}</td>
                     <td>{{ llamado.nombre_escuela }}</td>
                     <td>{{ llamado.periodo }}</td>
                     <td>{{ llamado.cierre_llamado }}</td>
+                  
                     <td>
-                        <a class="btn btn-uaco btn-sm" [routerLink]="['/form-resultados']"
-                            [queryParams]="{ idLlamado: llamado.id }">
+                      <ng-container *ngIf="llamado.inscriptos && llamado.inscriptos.length > 0; else desierto">
+                        
+                        <!-- Si tiene inscriptos pero no tiene puntaje, mostrar el botón -->
+                        <ng-container *ngIf="!tieneResultadosCargados(llamado); else listaOrdenMerito">
+                          <a class="btn btn-uaco btn-sm" [routerLink]="['/form-resultados']" [queryParams]="{ idLlamado: llamado.id }">
                             Cargar Resultados
-                        </a>
+                          </a>
+                        </ng-container>
+                        
+                      </ng-container>
+                  
+                      <!-- Texto "DESIERTO" si no hay inscriptos -->
+                      <ng-template #desierto>
+                        <span class="text-muted">DESIERTO</span>
+                      </ng-template>
+                  
+                      <!-- Lista de orden de mérito si tiene puntajes cargados -->
+                      <ng-template #listaOrdenMerito>
+                        <ol>
+                          <li *ngFor="let inscripto of ordenarPorPuntaje(llamado.inscriptos)">
+                            {{ inscripto.apellido }} {{ inscripto.nombre }}
+                          </li>
+                        </ol>
+                      </ng-template>
                     </td>
-                </tr>
+                  </tr>
+                  
+                  
             </tbody>
         </table>
     </div>

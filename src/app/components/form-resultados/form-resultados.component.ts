@@ -32,7 +32,7 @@ export class FormResultadosComponent implements OnInit {
     this.route.queryParamMap.subscribe(params => {
       this.idLlamado = Number(params.get('idLlamado'));
       console.log('ID recibido por queryParams:', this.idLlamado);
-  
+
       if (this.idLlamado) {
         this.cargarInscripciones(this.idLlamado);
       } else {
@@ -40,7 +40,7 @@ export class FormResultadosComponent implements OnInit {
       }
     });
     //await this.obtenerNombreMateria();
-    
+
   }
 
   /*async obtenerNombreMateria() {
@@ -50,7 +50,7 @@ export class FormResultadosComponent implements OnInit {
       console.error(error);
     }
   }*/
-  
+
   async cargarInscripciones(idLlamado: Number) {
     try {
       console.log('ID llamado:', idLlamado);
@@ -81,8 +81,12 @@ export class FormResultadosComponent implements OnInit {
     console.log('Resultados a enviar:', resultados);
 
     try {
-      const response = await this.llamadosService.guardarResultado(resultados);
-      console.log('Resultados guardados correctamente:', response);
+      for (const resultado of resultados) {
+        console.log('Guardando resultado:', resultado);
+        const response = await this.inscripcionesService.guardarResultado(resultado.puntaje, resultado.id_inscripcion);
+        console.log('Resultados guardados correctamente:', response);
+      }
+
       this.toastr.success('✅ Resultados guardados exitosamente', '¡Éxito!');
       this.form.reset();
       setTimeout(() => {
@@ -92,6 +96,6 @@ export class FormResultadosComponent implements OnInit {
       console.error('Error al guardar los resultados:', error);
       this.toastr.error('❌ Error al guardar el llamado', 'Error');
     }
-  
+
   }
 }

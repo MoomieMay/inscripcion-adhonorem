@@ -159,49 +159,5 @@ export class LlamadosService {
     return data?.materias?.[0]?.nombre_materia || '';
 
   }
-
-  // Método para guardar resultados
-  async guardarResultado(resultado: any[]) {
-    const { data, error } = await supabase
-      .from('resultados')
-      .insert(resultado); // acepta array de objetos
-
-    if (error) {
-      console.error('Error al guardar resultados:', error);
-      throw new Error(error.message);
-    }
-
-    return data;
-  }
-
-  // Método para obtener los inscriptos por llamado
-  async obtenerInscriptosPorLlamado(idLlamado: number) {
-    const { data, error } = await supabase
-      .from('resultados')
-      .select(`
-        id_inscripcion (
-          nombre,
-          apellido
-        ),
-        puntaje
-      `)
-      .eq('id_llamado', idLlamado)
-      .order('puntaje', { ascending: false });
-
-    if (error) {
-      console.error('Error al obtener inscriptos:', error);
-      return [];
-    }
-
-    if (!data) return [];
-
-    return data.map((item: any) => ({
-      nombre: item.id_inscripcion.nombre,
-      apellido: item.id_inscripcion.apellido,
-      puntaje: item.puntaje,
-    }));
-  }
-
-
 }
 
