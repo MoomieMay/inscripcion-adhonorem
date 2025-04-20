@@ -1,29 +1,43 @@
-<!-- Resultados de los llamados -->
-<div class="card">
+  <!-- Llamados Vencidos -->
+  <div class="card mt-5">
     <div class="card-body">
       <h5 class="card-title">Resultados</h5>
-      <h6 class="card-subtitle mb-2 text-body-secondary">Orden de Mérito de la Convocatoria</h6>
-
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Asignatura</th>
-            <th scope="col">Escuela</th>
-            <th scope="col">Periodo</th>
-            <th scope="col">Orden de Mérito</th>
+            <th>Asignatura</th>
+            <th>Escuela</th>
+            <th>Periodo</th>
+            <th>Fecha Cierre</th>
+            <th>Orden de Merito</th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
-          <tr>
-            <td colspan="4" class="text-center">No existen resultados disponibles</td>
+          <tr *ngIf="llamadosVencidos.length === 0">
+            <td colspan="4" class="text-center">No hay llamados vencidos</td>
           </tr>
-          <tr hidden>
-            <td>Asignatura</td>
-            <td>Escuela</td>
-            <td>Periodo</td>
-            <td>Orden de Mérito</td>
+          <tr *ngFor="let llamado of llamadosVencidos">
+            <td>{{ llamado.nombre_materia }}</td>
+            <td>{{ llamado.nombre_escuela }}</td>
+            <td>{{ llamado.periodo }}</td>
+            <td>{{ llamado.cierre_llamado }}</td>
+            <td>
+              <ng-container *ngIf="llamado.inscriptos.length > 0; else sinInscriptos">
+                <ol>
+                  <li *ngFor="let inscripto of llamado.inscriptos">
+                    {{ inscripto.apellido }} {{ inscripto.nombre }}
+                  </li>
+                </ol>
+              </ng-container>
+              <ng-template #sinInscriptos>
+                DESIERTO
+              </ng-template>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+
+

@@ -16,8 +16,8 @@
       <div class="col-md-3">
         <select id="filtroMateria" class="form-select" [(ngModel)]="filtroAsignatura">
           <option value="">Todas</option>
-          <option *ngFor="let materia of materias" [value]="materia">{{ materia }}</option>
-        </select>
+          <option *ngFor="let materia of materiasLista" [value]="materia.id">{{ materia.nombre_materia }}</option>
+        </select>       
       </div>
     </div>
 
@@ -39,7 +39,7 @@
           <td colspan="5" class="text-center">No existen inscriptos</td>
         </tr>
         <tr *ngFor="let inscripto of filtrarInscriptos()">
-          <td>{{ inscripto.asignatura }}</td>
+          <td>{{ obtenerNombreMateria(inscripto) }}</td>
           <td>{{ inscripto.nombre }}</td>
           <td>{{ inscripto.apellido }}</td>
           <td>{{ inscripto.documento }}</td>

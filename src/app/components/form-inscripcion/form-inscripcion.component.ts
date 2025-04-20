@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InscripcionesService } from 'src/app/services/inscripciones.service';
+import { InscripcionesService } from 'src/app/services/inscripciones/inscripciones.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 export class FormInscripcionComponent implements OnInit {
   form!: FormGroup;
   asignaturaSeleccionada: string = '';
+  idLlamado: number | null = null;
+  carreras: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -25,7 +27,11 @@ export class FormInscripcionComponent implements OnInit {
     // Recibe la asignatura desde la URL
     this.route.queryParams.subscribe(params => {
       this.asignaturaSeleccionada = params['asignatura'] || '';
+      this.idLlamado = params['id'] ? Number(params['id']) : null;
     });
+
+    this.obtenerCarreras();
+    
     // Inicializa el formulario
     this.form = this.fb.group({
       nombre: ['', Validators.required],
@@ -43,14 +49,30 @@ export class FormInscripcionComponent implements OnInit {
     });
   }
 
+  async obtenerCarreras() {
+    try {
+      const carrerasObtenidas = await this.inscripcionesService.obtenerCarreras();
+      console.log('Carreras obtenidas:', carrerasObtenidas);
+  
+      // Como es un array directamente, asignamos directo:
+      this.carreras = carrerasObtenidas || [];
+    } catch (error) {
+      console.error('Error al cargar carreras:', error);
+      this.carreras = [];
+    }
+  }
+ 
+// Acción al enviar el formulario
   onSubmit(): void {
     if (this.form.valid) {
       const inscripcion = {
         ...this.form.value,
-        asignatura: this.route.snapshot.queryParamMap.get('asignatura') || 'Sin asignatura'
+        documento: Number(this.form.value.documento),
+        telefono: Number(this.form.value.telefono),
+        carrera: Number(this.form.value.carrera),
       };
 
-      this.inscripcionesService.crearInscripcion(inscripcion, this.asignaturaSeleccionada)
+      this.inscripcionesService.crearInscripcion(inscripcion, this.idLlamado)
         .then(respuesta => {
           this.toastr.success(`✅ Inscripción exitosa. Nº Transacción: ${respuesta.id}`, '¡Éxito!');
           this.form.reset();

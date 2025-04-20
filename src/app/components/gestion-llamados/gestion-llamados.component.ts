@@ -1,16 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LlamadosService } from 'src/app/services/llamados/llamados.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-table-llamados',
-  templateUrl: './table-llamados.component.html',
-  styleUrls: ['./table-llamados.component.css']
+  selector: 'app-gestion-llamados',
+  templateUrl: './gestion-llamados.component.html',
+  styleUrls: ['./gestion-llamados.component.css']
 })
-export class TableLlamadosComponent implements OnInit {
+export class GestionLlamadosComponent implements OnInit {
+  id!: string; 
   llamadosVigentes: any[] = [];
   llamadosVencidos: any[] = [];
 
-  constructor(private llamadosService: LlamadosService) { }
+  constructor(
+    private llamadosService: LlamadosService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.cargarLlamados();
@@ -49,4 +56,19 @@ export class TableLlamadosComponent implements OnInit {
     const anio = date.getFullYear();
     return `${dia}-${mes}-${anio}`;
   }
+
+  // Método para eliminar el llamado
+  async eliminarLlamado(id: string) {
+    if (confirm('¿Estás seguro que deseas eliminar este llamado?')) {
+      try {
+        await this.llamadosService.eliminarLlamado(id);
+        this.toastr.success('✅ Llamado eliminado exitosamente', '¡Éxito!');
+        await this.cargarLlamados(); 
+      } catch (error) {
+        console.error(error);
+        this.toastr.error('❌ Error al eliminar el llamado', 'Error');
+      }
+    }
+  }
+
 }

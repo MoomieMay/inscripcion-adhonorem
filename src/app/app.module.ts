@@ -18,6 +18,9 @@ import { FormLlamadoComponent } from './components/form-llamado/form-llamado.com
 import { AppRoutingModule } from './app-routing.module';
 import { TableResultadosComponent } from './components/table-resultados/table-resultados.component';
 import { TableInscriptosComponent } from './components/table-inscriptos/table-inscriptos.component';
+import { GestionLlamadosComponent } from './components/gestion-llamados/gestion-llamados.component';
+import { FormResultadosComponent } from './components/form-resultados/form-resultados.component';
+import { FormLlamadoEditComponent } from './components/form-llamado-edit/form-llamado-edit.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { TableInscriptosComponent } from './components/table-inscriptos/table-in
     FormInscripcionComponent,
     FormLlamadoComponent,
     TableResultadosComponent,
-    TableInscriptosComponent
+    TableInscriptosComponent,
+    GestionLlamadosComponent,
+    FormResultadosComponent,
+    FormLlamadoEditComponent
   ],
   imports: [
     BrowserModule,
