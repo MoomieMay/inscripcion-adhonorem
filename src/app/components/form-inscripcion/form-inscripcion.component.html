@@ -65,19 +65,19 @@
           </div>
         </div>
   
+
         <div class="col-lg-6 mb-3">
           <div class="form-floating">
             <select class="form-select" id="carrera" formControlName="carrera">
               <option value="">Seleccione una opción</option>
-              <option value="Ingenieria en Sistemas">Ingeniería en Sistemas</option>
-              <option value="Licenciatura en Administración">Licenciatura en Administración</option>
-              <option value="Licenciatura en Higiene y Seguridad en el Trabajo">Lic. Higiene y Seguridad en el Trabajo</option>
-              <option value="Tecnicatura en Desarrollo Web">Tec. Desarrollo Web</option>
-              <!-- ... agregar las demás opciones -->
+              <option *ngFor="let carrera of carreras" [value]="carrera.id">
+                {{ carrera.nombre_carrera }}
+              </option>
             </select>
             <label for="carrera" class="col-form-label-sm">Carrera</label>
           </div>
         </div>
+        
   
         <div class="col-lg-3 mb-3">
           <div class="form-floating">

@@ -22,17 +22,17 @@
         </tr>
       </thead>
       <tbody class="table-group-divider">
-        <tr *ngIf="convocatoriasVigentes.length === 0">
+        <tr *ngIf="llamadosVigentes.length === 0">
           <td colspan="4" class="text-center">No existen llamados</td>
         </tr>
-        <tr *ngFor="let convocatoria of convocatoriasVigentes">
-          <td>{{ convocatoria.asignatura }}</td>
-          <td>{{ convocatoria.escuela }}</td>
-          <td>{{ convocatoria.periodo }}</td>
-          <td>{{ convocatoria.cierre }}</td>
+        <tr *ngFor="let llamado of llamadosVigentes">
+          <td>{{ llamado.nombre_materia }}</td>
+          <td>{{ llamado.nombre_escuela }}</td>
+          <td>{{ llamado.periodo }}</td>
+          <td>{{ llamado.cierre_llamado }}</td>
           <td>
             <a class="btn btn-uaco btn-sm" [routerLink]="['/form-inscripcion']"
-              [queryParams]="{ asignatura: convocatoria.asignatura }">
+              [queryParams]="{ asignatura: llamado.nombre_materia, id: llamado.id }">
               Inscribirme
             </a>
           </td>
@@ -56,14 +56,14 @@
         </tr>
       </thead>
       <tbody class="table-group-divider">
-        <tr *ngIf="convocatoriasVencidas.length === 0">
+        <tr *ngIf="llamadosVencidos.length === 0">
           <td colspan="4" class="text-center">No hay llamados vencidos</td>
         </tr>
-        <tr *ngFor="let convocatoria of convocatoriasVencidas">
-          <td>{{ convocatoria.asignatura }}</td>
-          <td>{{ convocatoria.escuela }}</td>
-          <td>{{ convocatoria.periodo }}</td>
-          <td>{{ convocatoria.cierre }}</td>
+        <tr *ngFor="let llamado of llamadosVencidos">
+          <td>{{ llamado.nombre_materia }}</td>
+          <td>{{ llamado.nombre_escuela }}</td>
+          <td>{{ llamado.periodo }}</td>
+          <td>{{ llamado.cierre_llamado }}</td>
         </tr>
       </tbody>
     </table>

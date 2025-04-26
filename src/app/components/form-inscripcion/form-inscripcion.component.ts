@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { InscripcionesService } from 'src/app/services/inscripciones.service';
-import { supabase } from 'src/app/services/supabase.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { InscripcionesService } from 'src/app/services/inscripciones/inscripciones.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'FormInscripcionComponent',
@@ -13,18 +12,26 @@ import { supabase } from 'src/app/services/supabase.service';
 export class FormInscripcionComponent implements OnInit {
   form!: FormGroup;
   asignaturaSeleccionada: string = '';
+  idLlamado: number | null = null;
+  carreras: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private inscripcionesService: InscripcionesService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     // Recibe la asignatura desde la URL
     this.route.queryParams.subscribe(params => {
       this.asignaturaSeleccionada = params['asignatura'] || '';
+      this.idLlamado = params['id'] ? Number(params['id']) : null;
     });
+
+    this.obtenerCarreras();
+    
     // Inicializa el formulario
     this.form = this.fb.group({
       nombre: ['', Validators.required],
@@ -42,21 +49,42 @@ export class FormInscripcionComponent implements OnInit {
     });
   }
 
+  async obtenerCarreras() {
+    try {
+      const carrerasObtenidas = await this.inscripcionesService.obtenerCarreras();
+      console.log('Carreras obtenidas:', carrerasObtenidas);
+  
+      // Como es un array directamente, asignamos directo:
+      this.carreras = carrerasObtenidas || [];
+    } catch (error) {
+      console.error('Error al cargar carreras:', error);
+      this.carreras = [];
+    }
+  }
+ 
+// Acción al enviar el formulario
   onSubmit(): void {
     if (this.form.valid) {
       const inscripcion = {
         ...this.form.value,
-        asignatura: this.route.snapshot.queryParamMap.get('asignatura') || 'Sin asignatura'
+        documento: Number(this.form.value.documento),
+        telefono: Number(this.form.value.telefono),
+        carrera: Number(this.form.value.carrera),
       };
 
-      this.inscripcionesService.crearInscripcion(inscripcion, this.asignaturaSeleccionada)
+      this.inscripcionesService.crearInscripcion(inscripcion, this.idLlamado)
         .then(respuesta => {
-          alert(`✅ Inscripción exitosa. Nº Transacción: ${respuesta.id}`);
+          this.toastr.success(`✅ Inscripción exitosa. Nº Transacción: ${respuesta.id}`, '¡Éxito!');
           this.form.reset();
+
+          // Redirige luego de 2 segundos
+          setTimeout(() => {
+            this.router.navigate(['/llamados']);
+          }, 2000);
         })
         .catch(error => {
           console.error(error);
-          alert('❌ Error al enviar el formulario');
+          this.toastr.error('❌ Error al enviar el formulario. Intente nuevamente.', 'Error');
         });
 
     } else {

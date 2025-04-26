@@ -1,0 +1,110 @@
+<!-- Llamados Vigentes -->
+<div class="card">
+    <div class="card-body">
+        <div class="card-body">
+            <div class="row align-items-center mb-3">
+                <!-- Título -->
+                <div class="col-md-9">
+                    <h5 class="card-title">Llamados Vigentes</h5>
+                </div>
+
+                <!-- Label -->
+                <div class="col-md-3 text-end d-flex justify-content-end">
+                    <a class="btn btn-success btn-sm me-2" [routerLink]="['/form-llamado']">
+                        Nuevo Llamado
+                    </a>
+                </div>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Asignatura</th>
+                        <th scope="col">Escuela</th>
+                        <th scope="col">Periodo</th>
+                        <th scope="col">Fecha Cierre</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr *ngIf="llamadosVigentes.length === 0">
+                        <td colspan="4" class="text-center">No existen llamados</td>
+                    </tr>
+                    <tr *ngFor="let llamado of llamadosVigentes">
+                        <td>{{ llamado.nombre_materia }}</td>
+                        <td>{{ llamado.nombre_escuela }}</td>
+                        <td>{{ llamado.periodo }}</td>
+                        <td>{{ llamado.cierre_llamado }}</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm me-2" [routerLink]="['/form-llamado-edit', llamado.id]"
+                                [queryParams]="{ asignatura: llamado.nombre_materia }">
+                                Editar
+                            </a>
+                            <a class="btn btn-danger btn-sm" (click)="eliminarLlamado(llamado.id)">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Llamados Vencidos -->
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Llamados Vencidos</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Asignatura</th>
+                    <th>Escuela</th>
+                    <th>Periodo</th>
+                    <th>Fecha Cierre</th>
+                    <th>Resultados</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr *ngIf="llamadosVencidos.length === 0">
+                    <td colspan="4" class="text-center">No hay llamados vencidos</td>
+                </tr>
+                
+                <tr *ngFor="let llamado of llamadosVencidos">
+                    <td>{{ llamado.nombre_materia }}</td>
+                    <td>{{ llamado.nombre_escuela }}</td>
+                    <td>{{ llamado.periodo }}</td>
+                    <td>{{ llamado.cierre_llamado }}</td>
+                  
+                    <td>
+                      <ng-container *ngIf="llamado.inscriptos && llamado.inscriptos.length > 0; else desierto">
+                        
+                        <!-- Si tiene inscriptos pero no tiene puntaje, mostrar el botón -->
+                        <ng-container *ngIf="!tieneResultadosCargados(llamado); else listaOrdenMerito">
+                          <a class="btn btn-uaco btn-sm" [routerLink]="['/form-resultados']" [queryParams]="{ idLlamado: llamado.id }">
+                            Cargar Resultados
+                          </a>
+                        </ng-container>
+                        
+                      </ng-container>
+                  
+                      <!-- Texto "DESIERTO" si no hay inscriptos -->
+                      <ng-template #desierto>
+                        <span class="text-muted">DESIERTO</span>
+                      </ng-template>
+                  
+                      <!-- Lista de orden de mérito si tiene puntajes cargados -->
+                      <ng-template #listaOrdenMerito>
+                        <ol>
+                          <li *ngFor="let inscripto of ordenarPorPuntaje(llamado.inscriptos)">
+                            {{ inscripto.apellido }} {{ inscripto.nombre }}
+                          </li>
+                        </ol>
+                      </ng-template>
+                    </td>
+                  </tr>
+                  
+                  
+            </tbody>
+        </table>
+    </div>
+</div>

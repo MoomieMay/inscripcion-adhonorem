@@ -5,11 +5,11 @@ import { LlamadosService } from 'src/app/services/llamados/llamados.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-form-llamado',
-  templateUrl: './form-llamado.component.html',
-  styleUrls: ['./form-llamado.component.css']
+  selector: 'app-form-llamado-edit',
+  templateUrl: './form-llamado-edit.component.html',
+  styleUrls: ['./form-llamado-edit.component.css']
 })
-export class FormLlamadoComponent implements OnInit {
+export class FormLlamadoEditComponent implements OnInit {
   form!: FormGroup;
   id!: string; // ID del llamado que viene de la URL
   llamado: any;
@@ -28,7 +28,6 @@ export class FormLlamadoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Inicializa el formulario vacío
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -42,27 +41,49 @@ export class FormLlamadoComponent implements OnInit {
       fecha_cierre: ['', Validators.required],
     });
 
-    this.cargarLlamado();
+    this.id = this.route.snapshot.paramMap.get('id')!; 
+    this.cargarLlamado(this.id);
     this.cargarDatos();
     this.escucharCambios();
   }
 
-  async cargarLlamado() {
+  //Carga el llamado según el ID
+  async cargarLlamado(id: string) {
     try {
-      const llamados = await this.llamadosService.obtenerTodosLosLlamados();
-      const llamado = llamados.find((c: any) => c.id === this.id);
-      if (llamados) {
-        this.form.patchValue(llamado);
-      } else {
-        this.toastr.error('Llamados no encontrado', 'Error');
-        this.router.navigate(['/gestion-llamados']);
+      this.llamado = await this.llamadosService.obtenerLlamadoPorId(id);
+  
+      if (this.llamado) {
+        this.form.patchValue({
+          nombre: this.llamado.nombre_responsable,
+          apellido: this.llamado.apellido_responsable,
+          nro_legajo: this.llamado.legajo_responsable,
+          periodo: this.llamado.periodo,
+          porcentaje: this.llamado.porcentaje,
+          fecha_cierre: this.llamado.cierre_llamado,
+          codigo: this.llamado.materia_llamado.codigo_materia,
+          asignatura: this.llamado.materia_llamado.nombre_materia
+        });
+  
+        // Setear y deshabilitar los campos escuela y carrera
+        this.form.get('escuela')?.setValue(this.llamado.materia_llamado.carrera_materia.escuela_carrera.nombre_escuela);
+        this.form.get('escuela')?.disable();
+  
+        this.form.get('carrera')?.setValue(this.llamado.materia_llamado.carrera_materia.nombre_carrera);
+        this.form.get('carrera')?.disable();
+        console.log('Carrera:', this.llamado.materia_llamado.carrera_materia.id);
+
+        this.form.get('codigo')?.setValue(this.llamado.materia_llamado.codigo_materia);
+        this.form.get('codigo')?.enable();
+        this.form.get('asignatura')?.setValue(this.llamado.materia_llamado.nombre_materia);
+
+
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error al cargar el llamado:', error);
       this.toastr.error('Error al cargar el llamado', 'Error');
     }
   }
-
+  
   //Carga los datos de las tablas escuelas, carreras y materias en los selects
   async cargarDatos() {
     try {
@@ -76,39 +97,16 @@ export class FormLlamadoComponent implements OnInit {
 
   //Escucha los cambios en los selects y habilita o deshabilita los campos correspondientes
   escucharCambios() {
-    this.form.get('escuela')?.valueChanges.subscribe(id => {
-      this.filtrarCarreras(id);
-    });
-
-    this.form.get('carrera')?.valueChanges.subscribe(() => {
-      this.form.get('codigo')?.enable();
-    });
-
     this.form.get('codigo')?.valueChanges.subscribe(codigo => {
       this.buscarMateria(codigo);
     });
   }
 
-  //Filtra las carreras según la escuela seleccionada
-  async filtrarCarreras(idEscuela: string) {
-    const idEscuelaNumber = Number(idEscuela);
-    this.carrerasFiltradas = this.carreras.filter(carrera => carrera.escuela_carrera === idEscuelaNumber);
-
-    console.log("Carreras filtradas en filtrar Carrera:", this.carrerasFiltradas);
-
-    // Reset y deshabilitar el resto de los campos
-    this.form.get('carrera')?.enable();
-    this.form.get('carrera')?.reset('');
-    this.form.get('codigo')?.disable();
-    this.form.get('codigo')?.reset('');
-    this.form.get('asignatura')?.disable();
-    this.form.get('asignatura')?.reset('');
-  }
-
 
   //Busca la materia según el código ingresado
   buscarMateria(codigo: string) {
-    const carreraSeleccionada = Number(this.form.get('carrera')?.value);
+    const carreraSeleccionada = Number(this.llamado.materia_llamado.carrera_materia.id);
+    console.log('Carrera seleccionada:', carreraSeleccionada);
     const codigoNumber = Number(codigo);
     const materia = this.materias.find(m => m.codigo_materia === codigoNumber && m.carrera_materia === carreraSeleccionada);
 
@@ -123,7 +121,7 @@ export class FormLlamadoComponent implements OnInit {
 
   //Obtiene el ID de la materia seleccionada
   obtenerIdMateria() {
-    const carreraSeleccionada = Number(this.form.get('carrera')?.value);
+    const carreraSeleccionada = Number(this.llamado.materia_llamado.carrera_materia.id);
     const codigoIngresado = Number(this.form.get('codigo')?.value);
 
     const materia = this.materias.find(m =>
@@ -145,26 +143,22 @@ export class FormLlamadoComponent implements OnInit {
     const formValues = this.form.value;
 
     const llamadoData = {
+      cierre_llamado: formValues.fecha_cierre,
       nombre_responsable: formValues.nombre,
       apellido_responsable: formValues.apellido,
       legajo_responsable: formValues.nro_legajo,
       periodo: formValues.periodo,
-      porcentaje: formValues.porcentaje,
-      cierre_llamado: formValues.fecha_cierre,
       materia_llamado: Number(this.obtenerIdMateria()),
+      porcentaje: formValues.porcentaje,
     };
 
     try {
+      console.log('Llamado a enviar:', llamadoData.materia_llamado);
       if (this.id) {
         // Actualizar llamado existente
-        await this.llamadosService.actualizarLlamado(this.id, this.form.value);
+        await this.llamadosService.actualizarLlamado(this.id, llamadoData);
         this.toastr.success('✅ Llamado actualizado exitosamente', '¡Éxito!');
-      } else {
-        // Crear nuevo llamado
-        await this.llamadosService.crearLlamado(llamadoData);
-        this.toastr.success('✅ Llamado creado exitosamente', '¡Éxito!');
-      }
-
+      } 
       this.form.reset();
       setTimeout(() => {
         this.router.navigate(['/gestion-llamados']);
