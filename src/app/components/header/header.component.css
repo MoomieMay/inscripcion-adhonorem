@@ -22,3 +22,11 @@
   form .btn:hover {
     background-color: #436a6c;
   }
+
+  .dropdown-menu {
+    width: 300px; /* o el ancho que quieras */
+  right: 0; /* pegado al borde derecho */
+  left: auto; /* aseguramos que no se alinee a la izquierda */
+  transform: translateX(0); /* quitamos desplazamientos automáticos de Bootstrap */
+
+  } 

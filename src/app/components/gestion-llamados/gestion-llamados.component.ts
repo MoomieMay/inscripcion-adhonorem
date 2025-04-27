@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { LlamadosService } from 'src/app/services/llamados/llamados.service';
 import { InscripcionesService } from 'src/app/services/inscripciones/inscripciones.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-gestion-llamados',
@@ -40,7 +42,7 @@ export class GestionLlamadosComponent implements OnInit {
         cierre_llamado: this.formatearFecha(llamado.cierre_llamado),
       }));
 
-      //********************** NUEVO ****************************// */
+
       // Llamados vencidos
       this.llamadosVencidos = await Promise.all(
         this.llamadosVencidos.map(async (llamado: any) => ({
@@ -54,7 +56,7 @@ export class GestionLlamadosComponent implements OnInit {
       console.error('Error al cargar los llamados:', error);
     }
   }
-  //********************** NUEVO ****************************// */
+
   // Método para devolver si hay inscriptos sin puntaje 
   tieneInscriptosSinPuntaje(llamado: any): boolean {
     if (!llamado.inscriptos || llamado.inscriptos.length === 0) {
@@ -96,7 +98,16 @@ export class GestionLlamadosComponent implements OnInit {
 
   // Método para eliminar el llamado
   async eliminarLlamado(id: string) {
-    if (confirm('¿Estás seguro que deseas eliminar este llamado?')) {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción no se puede deshacer.",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',  
+      cancelButtonColor: '#d33',      
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+    if (result.isConfirmed) {
       try {
         await this.llamadosService.eliminarLlamado(id);
         this.toastr.success('✅ Llamado eliminado exitosamente', '¡Éxito!');

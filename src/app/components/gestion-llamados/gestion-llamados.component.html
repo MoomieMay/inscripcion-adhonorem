@@ -10,8 +10,8 @@
 
                 <!-- Label -->
                 <div class="col-md-3 text-end d-flex justify-content-end">
-                    <a class="btn btn-success btn-sm me-2" [routerLink]="['/form-llamado']">
-                        Nuevo Llamado
+                    <a class="btn btn-uaco btn-sm" [routerLink]="['/form-llamado']">
+                        <i class="fa-solid fa-file-circle-plus me-1"></i>Nuevo Llamado
                     </a>
                 </div>
             </div>
@@ -36,12 +36,12 @@
                         <td>{{ llamado.periodo }}</td>
                         <td>{{ llamado.cierre_llamado }}</td>
                         <td>
-                            <a class="btn btn-warning btn-sm me-2" [routerLink]="['/form-llamado-edit', llamado.id]"
+                            <a class="btn btn-secondary btn-sm me-2" [routerLink]="['/form-llamado-edit', llamado.id]"
                                 [queryParams]="{ asignatura: llamado.nombre_materia }">
-                                Editar
+                                <i class="fa-solid fa-pen-to-square me-1"></i>Editar
                             </a>
                             <a class="btn btn-danger btn-sm" (click)="eliminarLlamado(llamado.id)">
-                                Eliminar
+                                <i class="fa-solid fa-trash me-1"></i>Eliminar
                             </a>
                         </td>
                     </tr>
@@ -81,7 +81,7 @@
                         <!-- Si tiene inscriptos pero no tiene puntaje, mostrar el botón -->
                         <ng-container *ngIf="!tieneResultadosCargados(llamado); else listaOrdenMerito">
                           <a class="btn btn-uaco btn-sm" [routerLink]="['/form-resultados']" [queryParams]="{ idLlamado: llamado.id }">
-                            Cargar Resultados
+                            <i class="fa-solid fa-list-check me-1"></i>Cargar Resultados
                           </a>
                         </ng-container>
                         
