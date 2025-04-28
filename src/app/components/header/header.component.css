@@ -28,5 +28,8 @@
   right: 0; /* pegado al borde derecho */
   left: auto; /* aseguramos que no se alinee a la izquierda */
   transform: translateX(0); /* quitamos desplazamientos automáticos de Bootstrap */
-
   } 
+
+.icon-out{
+  transform: rotate(180deg);
+}

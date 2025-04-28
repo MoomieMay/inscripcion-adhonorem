@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
   texto: string = "Inscripción Alumno Ayudante Ad Honorem"
   email = '';
   password = '';
-  isLoggedIn = false;
+  isLoggedIn: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -21,19 +21,25 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkSession();
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
+      this.isLoggedIn = isLoggedIn;
+    });
   }
+  
 
-  async checkSession() {
-    const { data, error } = await this.authService.getUser();
-    this.isLoggedIn = !!data?.user;
-  }
+  /* async checkSession() {
+    const userRole = await this.authService.getUserRole();
+    if (userRole) {
+      console.log('User role:', userRole);
+    } else {
+      console.error('Failed to retrieve user role');
+    }
+  } */
 
   async login() {
     try {
       await this.authService.login(this.email, this.password);
       this.toastr.success('Inicio de sesión exitoso ✅');
-      this.isLoggedIn = true;
       this.router.navigate(['/lista-inscriptos']);
     } catch (error) {
       console.error(error);
@@ -42,8 +48,7 @@ export class HeaderComponent implements OnInit {
   }
   async logout() {
     await this.authService.logout();
-    this.isLoggedIn = false;
     this.toastr.info('Sesión finalizada');
-    this.router.navigate(['/llamados']);
+    this.router.navigate(['/']);
   }
 }

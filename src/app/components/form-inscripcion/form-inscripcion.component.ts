@@ -31,29 +31,32 @@ export class FormInscripcionComponent implements OnInit {
     });
 
     this.obtenerCarreras();
-    
+
     // Inicializa el formulario
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/)]],
       tipo_documento: ['', Validators.required],
       documento: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       telefono: ['', Validators.required],
-      correo_electronico: ['', [Validators.required, Validators.email]],
-      nro_legajo: ['', Validators.required],
+      correo_electronico: ['', [
+        Validators.required, Validators.email, 
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],      
+      nro_legajo: ['', [Validators.required]],
       carrera: ['', Validators.required],
-      porcentaje: ['', Validators.required],
+      porcentaje: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       conectividad: ['', Validators.required],
       dispositivos: ['', Validators.required],
       beca: ['', Validators.required]
     });
   }
 
+  // Carga las carreras desde el servicio
   async obtenerCarreras() {
     try {
       const carrerasObtenidas = await this.inscripcionesService.obtenerCarreras();
       console.log('Carreras obtenidas:', carrerasObtenidas);
-  
+
       // Como es un array directamente, asignamos directo:
       this.carreras = carrerasObtenidas || [];
     } catch (error) {
@@ -61,9 +64,15 @@ export class FormInscripcionComponent implements OnInit {
       this.carreras = [];
     }
   }
- 
-// Acción al enviar el formulario
+
+  // Acción al enviar el formulario
   onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toastr.error('❌ Revise su formulario.', 'Error de validación');
+      return;
+    }
+
     if (this.form.valid) {
       const inscripcion = {
         ...this.form.value,
@@ -89,6 +98,21 @@ export class FormInscripcionComponent implements OnInit {
 
     } else {
       this.form.markAllAsTouched();
+    }
+  }
+
+  soloNumeros(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  onInputChange() {
+    const porcentajeControl = this.form.get('porcentaje');
+    if (porcentajeControl) {
+      // Esto asegurará que Angular valide correctamente el campo.
+      porcentajeControl.updateValueAndValidity();
     }
   }
 }

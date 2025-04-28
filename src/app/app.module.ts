@@ -19,6 +19,7 @@ import { TableInscriptosComponent } from './components/table-inscriptos/table-in
 import { GestionLlamadosComponent } from './components/gestion-llamados/gestion-llamados.component';
 import { FormResultadosComponent } from './components/form-resultados/form-resultados.component';
 import { FormLlamadoEditComponent } from './components/form-llamado-edit/form-llamado-edit.component';
+import { AccessDeniedComponent } from './components/access-denied/access-denied.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { FormLlamadoEditComponent } from './components/form-llamado-edit/form-ll
     TableInscriptosComponent,
     GestionLlamadosComponent,
     FormResultadosComponent,
-    FormLlamadoEditComponent
+    FormLlamadoEditComponent,
+    AccessDeniedComponent
   ],
   imports: [
     BrowserModule,

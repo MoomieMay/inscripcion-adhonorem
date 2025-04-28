@@ -1,100 +1,139 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <!-- HEADER -->
-    <div class="row align-items-center m-3">
-      <div class="col-md-6">
-        <h3 class="card-title fw-bold mb-0">Formulario Edición de Llamado</h3>
-      </div>
-  
-      <div class="col-md-3 text-end d-flex justify-content-end">
-        <label for="fechaCierre" class="form-label mb-0 fw-bold">Fecha de Cierre:</label>
-      </div>
-      <div class="col-md-3">
-        <input type="date" id="fechaCierre" class="form-control" formControlName="fecha_cierre">
+  <!-- ENCABEZADO -->
+  <div class="row align-items-center m-3">
+    <div class="col-md-6">
+      <h3 class="card-title fw-bold mb-0">Formulario Edición de Llamado</h3>
+    </div>
+
+    <div class="col-md-3 text-end d-flex justify-content-end">
+      <label for="fechaCierre" class="form-label mb-0 fw-bold">Fecha de Cierre:</label>
+    </div>
+    <div class="col-md-3">
+      <input type="date" id="fechaCierre" class="form-control" formControlName="fecha_cierre">
+      <div *ngIf="form.get('fecha_cierre')?.touched && form.get('fecha_cierre')?.invalid" class="text-danger small">
+        La fecha de cierre es obligatoria.
       </div>
     </div>
-  
-    <!-- DOCENTE RESPONSABLE -->
-    <div class="card mb-4">
-      <h5 class="card-header fs-6 fw-bold">Docente Responsable</h5>
-      <div class="card-body row mx-3">
-        <div class="col-md-4 mb-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="nombre" placeholder="" formControlName="nombre">
-            <label for="nombre" class="col-form-label-sm">Nombre</label>
-          </div>
+  </div>
+
+  <!-- DOCENTE RESPONSABLE -->
+  <div class="card mb-4">
+    <h5 class="card-header fs-6 fw-bold">Docente Responsable</h5>
+    <div class="card-body row mx-3">
+      <div class="col-md-4 mb-4">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="nombre" placeholder="" formControlName="nombre">
+          <label for="nombre" class="col-form-label-sm">Nombre</label>
         </div>
-  
-        <div class="col-md-4 mb-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="apellido" placeholder="" formControlName="apellido">
-            <label for="apellido" class="col-form-label-sm">Apellido</label>
+        <div *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid" class="text-danger small">
+          <div *ngIf="form.get('nombre')?.errors?.['required']">
+            El nombre es obligatorio.
           </div>
-        </div>
-  
-        <div class="col-md-4 mb-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="legajo" placeholder="" formControlName="nro_legajo">
-            <label for="legajo" class="col-form-label-sm">N° Legajo</label>
+          <div *ngIf="form.get('nombre')?.errors?.['pattern']">
+            El nombre solo puede contener letras y espacios.
           </div>
         </div>
       </div>
-    </div>
-  
-    <!-- DATOS ACADÉMICOS -->
-    <div class="card">
-      <h5 class="card-header fs-6 fw-bold">Materia</h5>
-      <div class="card-body row mx-3">
-        <div class="col-lg-3 mb-3">
-          <div class="form-floating">
-            <select class="form-select" id="periodo" formControlName="periodo">
-              <option value="">Seleccione una opción</option>
-              <option value="1er Cuatrimestre">1er Cuatrimestre</option>
-              <option value="2do Cuatrimestre">2do Cuatrimestre</option>
-              <option value="Anual">Anual</option>
-            </select>
-            <label for="periodo" class="col-form-label-sm">Periodo</label>
+
+      <div class="col-md-4 mb-4">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="apellido" placeholder="" formControlName="apellido">
+          <label for="apellido" class="col-form-label-sm">Apellido</label>
+        </div>
+        <div *ngIf="form.get('apellido')?.touched && form.get('apellido')?.invalid" class="text-danger small">
+          <div *ngIf="form.get('apellido')?.errors?.['required']">
+            El apellido es obligatorio.
+          </div>
+          <div *ngIf="form.get('apellido')?.errors?.['pattern']">
+            El apellido solo puede contener letras y espacios.
           </div>
         </div>
-  
-        <div class="col-lg-4 mb-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="escuela" placeholder="" formControlName="escuela">
-            <label for="escuela" class="col-form-label-sm">Escuela</label>
-          </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="form-floating">
+          <input type="number" class="form-control" id="legajo" placeholder="" formControlName="nro_legajo" (keypress)="soloNumeros($event)">
+          <label for="legajo" class="col-form-label-sm">N° Legajo</label>
         </div>
-  
-        <div class="col-lg-5 mb-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="carrera" placeholder="" formControlName="carrera">
-            <label for="carrera" class="col-form-label-sm">Carrera</label>
-          </div>
-        </div>
-  
-        <div class="col-lg-3 mb-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="codigo" placeholder="" formControlName="codigo">
-            <label for="codigo" class="col-form-label-sm">Código</label>
-          </div>
-        </div>
-  
-        <div class="col-lg-6 mb-3">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="asignatura" placeholder="" formControlName="asignatura">
-            <label for="asignatura" class="col-form-label-sm">Nombre</label>
-          </div>
-        </div>
-  
-        <div class="col-lg-3 mb-3">
-          <div class="form-floating">
-            <input type="number" class="form-control" id="porcentaje" placeholder="" formControlName="porcentaje">
-            <label for="porcentaje" class="col-form-label-sm">Porcentaje Requerido</label>
-          </div>
+        <div *ngIf="form.get('nro_legajo')?.touched && form.get('nro_legajo')?.invalid" class="text-danger small">
+          El número de legajo es obligatorio.
         </div>
       </div>
     </div>
-  
-    <div class="mt-4 text-end mx-3">
-      <button type="submit" class="btn btn-uaco me-1"> <i class="fa-solid fa-check me-1"></i>Editar Llamado</button>
+  </div>
+
+  <!-- DATOS ACADÉMICOS -->
+  <div class="card">
+    <h5 class="card-header fs-6 fw-bold">Materia</h5>
+    <div class="card-body row mx-3">
+      <div class="col-lg-3 mb-3">
+        <div class="form-floating">
+          <select class="form-select" id="periodo" formControlName="periodo">
+            <option value="">Seleccione una opción</option>
+            <option value="1er Cuatrimestre">1er Cuatrimestre</option>
+            <option value="2do Cuatrimestre">2do Cuatrimestre</option>
+            <option value="Anual">Anual</option>
+          </select>
+          <label for="periodo" class="col-form-label-sm">Periodo</label>
+        </div>
+        <div *ngIf="form.get('periodo')?.touched && form.get('periodo')?.invalid" class="text-danger small">
+          El periodo es obligatorio.
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-3">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="escuela" placeholder="" formControlName="escuela">
+          <label for="escuela" class="col-form-label-sm">Escuela</label>
+        </div>
+      </div>
+
+      <div class="col-lg-5 mb-3">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="carrera" placeholder="" formControlName="carrera">
+          <label for="carrera" class="col-form-label-sm">Carrera</label>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-3">
+        <div class="form-floating">
+          <input type="number" class="form-control" id="codigo" placeholder="" formControlName="codigo" (keypress)="soloNumeros($event)">
+          <label for="codigo" class="col-form-label-sm">Código</label>
+        </div>
+        <div *ngIf="form.get('codigo')?.touched && form.get('codigo')?.invalid" class="text-danger small">
+          El código es obligatorio.
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-3">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="asignatura" placeholder="" formControlName="asignatura">
+          <label for="asignatura" class="col-form-label-sm">Nombre</label>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-3">
+        <div class="form-floating">
+          <input type="number" class="form-control" id="porcentaje" placeholder="" formControlName="porcentaje" min="20" max="100" (keypress)="soloNumeros($event)" (input)="onInputChange()">
+          <label for="porcentaje" class="col-form-label-sm">Porcentaje Requerido</label>
+        </div>
+        <div *ngIf="form.get('porcentaje')?.touched && form.get('porcentaje')?.invalid" class="text-danger small">
+          <div *ngIf="form.get('porcentaje')?.errors?.['required']">
+            El porcentaje es obligatorio.
+          </div>
+          <div *ngIf="form.get('porcentaje')?.errors?.['min']">
+            Debe ser mayor o igual a 20.
+          </div>
+          <div *ngIf="form.get('porcentaje')?.errors?.['max']">
+            Debe ser menor o igual a 100.
+          </div>
+        </div>
+        
+      </div>
     </div>
-  </form>
-  
+  </div>
+
+  <div class="mt-4 text-end mx-3">
+    <button type="submit" class="btn btn-uaco me-1"> <i class="fa-solid fa-check me-1"></i>Editar Llamado</button>
+  </div>
+</form>

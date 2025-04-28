@@ -85,6 +85,7 @@ export class InscripcionesService {
     return data || [];
   }
 
+
   // Método para guardar resultados
   async guardarResultado(resultado: any[], id: number) {
     const { data, error } = await supabase
@@ -146,6 +147,58 @@ export class InscripcionesService {
   }
 
 
+  async obtenerNombreMateria(idLlamado: number): Promise<string> {
+    console.log('Entro a obtenerNombreMateria con idLlamado:', idLlamado);
+    try {
+      // Paso 1: Obtener el ID de la materia desde la tabla "llamados"
+      const { data, error } = await supabase
+        .from('llamados')
+        .select('materia_llamado')  // Solo seleccionamos el ID de la materia
+        .eq('id', idLlamado)
+        .single();  // Obtener un solo resultado
+  
+      if (error) {
+        throw error;
+      }
+
+      console.log('Datos obtenidos desde la base de datos:', data); 
+  
+      if (data && data.materia_llamado) {
+        const materiaId = data.materia_llamado;  // El ID de la materia
+  
+        // Paso 2: Buscar el nombre de la materia en la tabla "materias"
+        const { data: materiaData, error: materiaError } = await supabase
+          .from('materias')
+          .select('nombre_materia')  // Solo seleccionamos el nombre de la materia
+          .eq('id', materiaId)
+          .single();  // Obtener un solo resultado
+  
+        if (materiaError) {
+          throw materiaError;
+        }
+  
+        if (materiaData && materiaData.nombre_materia) {
+          console.log('Materia_llamado service:', data.materia_llamado);
+          return materiaData.nombre_materia;  // Retornamos el nombre de la materia
+        } else {
+          throw new Error('No se encontró el nombre de la materia');
+        }
+      } else {
+        throw new Error('No se encontró el ID de materia en el llamado');
+      }
+    } catch (error) {
+      console.error('Error al obtener nombre de materia:', error);
+      throw error;
+    }
+  }
+  
+  
+  
+  
+  
+  
+
+  
   // PDF
   // Método para obtener todas las carreras de la base de datos
   async obtenerCarreras() {

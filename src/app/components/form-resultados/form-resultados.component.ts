@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InscripcionesService } from 'src/app/services/inscripciones/inscripciones.service';
-import { LlamadosService } from 'src/app/services/llamados/llamados.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -14,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class FormResultadosComponent implements OnInit {
   form: FormGroup;
   inscripciones: any[] = [];
-  idLlamado: Number = 0;
+  idLlamado: number = 0;
   nombreMateria: string = '';
 
   constructor(
@@ -22,7 +21,6 @@ export class FormResultadosComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private inscripcionesService: InscripcionesService,
-    private llamadosService: LlamadosService,
     private toastr: ToastrService,
   ) {
     this.form = this.fb.group({});
@@ -31,34 +29,42 @@ export class FormResultadosComponent implements OnInit {
   async ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       this.idLlamado = Number(params.get('idLlamado'));
-      console.log('ID recibido por queryParams:', this.idLlamado);
 
       if (this.idLlamado) {
         this.cargarInscripciones(this.idLlamado);
+        this.obtenerNombreMateria();
       } else {
         console.error('No se recibió id en queryParams');
       }
     });
-    //await this.obtenerNombreMateria();
-
   }
 
-  /*async obtenerNombreMateria() {
+  // Método para obtener el nombre de la materia a partir del idLlamado
+  async obtenerNombreMateria() {
     try {
-      this.nombreMateria = await this.llamadosService.obtenerNombreMateria(idLlamado);
+      this.nombreMateria = await this.inscripcionesService.obtenerNombreMateria(this.idLlamado);
+      console.log('Nombre de la materia:', this.nombreMateria);
     } catch (error) {
-      console.error(error);
+      console.error('Error al obtener nombre de materia:', error);
     }
-  }*/
-
+  }
+  
+  // Método para cargar las inscripciones
   async cargarInscripciones(idLlamado: Number) {
     try {
       console.log('ID llamado:', idLlamado);
       this.inscripciones = await this.inscripcionesService.obtenerInscripcionesPorLlamado(idLlamado);
 
-      // Crear controles de puntaje
+      // Crear controles de puntaje con validaciones
       this.inscripciones.forEach((inscripcion, index) => {
-        this.form.addControl('puntaje_' + index, this.fb.control(''));
+        this.form.addControl(
+          'puntaje_' + index,
+          this.fb.control('', [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(100)
+          ])
+        );
       });
 
     } catch (error) {
@@ -66,7 +72,14 @@ export class FormResultadosComponent implements OnInit {
     }
   }
 
+  // Método para cargar el puntaje
   async onSubmit(): Promise<void> {
+    if (this.form.invalid) {
+      this.toastr.error('❌ Campos incompletos o con error.', 'Error de validación');
+      this.form.markAllAsTouched(); 
+      return; 
+    }
+
     const resultados: any[] = [];
 
     this.inscripciones.forEach((inscripcion, index) => {
@@ -84,7 +97,7 @@ export class FormResultadosComponent implements OnInit {
       for (const resultado of resultados) {
         console.log('Guardando resultado:', resultado);
         const response = await this.inscripcionesService.guardarResultado(resultado.puntaje, resultado.id_inscripcion);
-        console.log('Resultados guardados correctamente:', response);
+        console.log('Resultado guardado:', response);
       }
 
       this.toastr.success('✅ Resultados guardados exitosamente', '¡Éxito!');
@@ -94,8 +107,7 @@ export class FormResultadosComponent implements OnInit {
       }, 2000);
     } catch (error) {
       console.error('Error al guardar los resultados:', error);
-      this.toastr.error('❌ Error al guardar el llamado', 'Error');
+      this.toastr.error('❌ Error al guardar los resultados.', 'Error');
     }
-
   }
 }

@@ -9,12 +9,28 @@
             <input type="text" class="form-control" id="nombre" placeholder="" formControlName="nombre">
             <label for="nombre" class="col-form-label-sm">Nombre</label>
           </div>
+          <div *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid" class="text-danger small">
+            <div *ngIf="form.get('nombre')?.errors?.['required']">
+              El nombre es obligatorio.
+            </div>
+            <div *ngIf="form.get('nombre')?.errors?.['pattern']">
+              El nombre solo puede contener letras y espacios.
+            </div>
+          </div>
         </div>
   
         <div class="col-md-3 mb-3">
           <div class="form-floating">
             <input type="text" class="form-control" id="apellido" placeholder="" formControlName="apellido">
             <label for="apellido" class="col-form-label-sm">Apellido</label>
+          </div>
+          <div *ngIf="form.get('apellido')?.touched && form.get('apellido')?.invalid" class="text-danger small">
+            <div *ngIf="form.get('apellido')?.errors?.['required']">
+              El apellido es obligatorio.
+            </div>
+            <div *ngIf="form.get('apellido')?.errors?.['pattern']">
+              El apellido solo puede contener letras y espacios.
+            </div>
           </div>
         </div>
   
@@ -29,19 +45,28 @@
             </select>
             <label for="tipoDocumento" class="col-form-label-sm">Tipo Documento</label>
           </div>
+          <div *ngIf="form.get('tipo_documento')?.touched && form.get('tipo_documento')?.invalid" class="text-danger small">
+            Debes seleccionar tipo de documento.
+          </div>
         </div>
   
         <div class="col-md-3 mb-3">
           <div class="form-floating">
-            <input type="number" class="form-control" id="documento" placeholder="" formControlName="documento">
+            <input type="number" class="form-control" id="documento" placeholder="" formControlName="documento" (keypress)="soloNumeros($event)">
             <label for="documento" class="col-form-label-sm">N° Documento</label>
+          </div>
+          <div *ngIf="form.get('documento')?.touched && form.get('documento')?.invalid" class="text-danger small">
+            El documento es obligatorio.
           </div>
         </div>
   
         <div class="col-md-6 mb-3">
           <div class="form-floating">
-            <input type="text" class="form-control" id="telefono" placeholder="" formControlName="telefono">
+            <input type="text" class="form-control" id="telefono" placeholder="" formControlName="telefono" (keypress)="soloNumeros($event)">
             <label for="telefono" class="col-form-label-sm">Número de teléfono</label>
+          </div>
+          <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger small">
+            El teléfono es obligatorio.
           </div>
         </div>
   
@@ -49,6 +74,9 @@
           <div class="form-floating">
             <input type="email" class="form-control" id="correo" placeholder="" formControlName="correo_electronico">
             <label for="correo" class="col-form-label-sm">Correo Electrónico</label>
+          </div>
+          <div *ngIf="form.get('correo_electronico')?.touched && form.get('correo_electronico')?.invalid" class="text-danger small">
+            El correo electrónico es obligatorio.
           </div>
         </div>
       </div>
@@ -63,6 +91,9 @@
             <input type="text" class="form-control" id="legajo" placeholder="" formControlName="nro_legajo">
             <label for="legajo" class="col-form-label-sm">N° Legajo</label>
           </div>
+          <div *ngIf="form.get('nro_legajo')?.touched && form.get('nro_legajo')?.invalid" class="text-danger small">
+            El número de legajo es obligatorio.
+          </div>
         </div>
   
 
@@ -76,13 +107,19 @@
             </select>
             <label for="carrera" class="col-form-label-sm">Carrera</label>
           </div>
+          <div *ngIf="form.get('carrera')?.touched && form.get('carrera')?.invalid" class="text-danger small">
+            Debes seleccionar la carrera.
+          </div>
         </div>
         
   
         <div class="col-lg-3 mb-3">
           <div class="form-floating">
-            <input type="number" class="form-control" id="porcentaje" placeholder="" formControlName="porcentaje">
+            <input type="number" class="form-control" id="porcentaje" placeholder="" formControlName="porcentaje" (keypress)="soloNumeros($event)">
             <label for="porcentaje" class="col-form-label-sm">Porcentaje Aprobación</label>
+          </div>
+          <div *ngIf="form.get('porcentaje')?.touched && form.get('porcentaje')?.invalid" class="text-danger small">
+            El porcentaje es obligatorio.
           </div>
         </div>
   
@@ -97,6 +134,9 @@
             </select>
             <label for="conectividad" class="col-form-label-sm">Conectividad</label>
           </div>
+          <div *ngIf="form.get('conectividad')?.touched && form.get('conectividad')?.invalid" class="text-danger small">
+            Debes seleccionar una opción.
+          </div>
         </div>
   
         <div class="col-lg-5 mb-3">
@@ -110,6 +150,9 @@
             </select>
             <label for="dispositivo" class="col-form-label-sm">Dispositivos</label>
           </div>
+          <div *ngIf="form.get('dispositivos')?.touched && form.get('dispositivos')?.invalid" class="text-danger small">
+            Debes seleccionar una opción.
+          </div>
         </div>
   
         <div class="col-lg-3 mb-3">
@@ -121,6 +164,9 @@
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" value="false" formControlName="beca" id="becaNo">
             <label class="form-check-label" for="becaNo">No</label>
+          </div>
+          <div *ngIf="form.get('beca')?.touched && form.get('beca')?.invalid" class="text-danger small">
+            Debes seleccionar si eres beneficiario de beca.
           </div>
         </div>
       </div>

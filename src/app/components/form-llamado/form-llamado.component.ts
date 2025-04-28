@@ -30,15 +30,15 @@ export class FormLlamadoComponent implements OnInit {
   ngOnInit(): void {
     // Inicializa el formulario vacío
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      nro_legajo: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/)]],
+      nro_legajo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       periodo: ['', Validators.required],
       escuela: ['', Validators.required],
       carrera: [{ value: '', disabled: true }, Validators.required],
-      codigo: [{ value: '', disabled: true }, Validators.required],
+      codigo: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d+$/)]],
       asignatura: [{ value: '', disabled: true }],
-      porcentaje: ['', Validators.required],
+      porcentaje: ['', [Validators.required, Validators.min(20), Validators.max(100), Validators.pattern(/^\d+$/)]],
       fecha_cierre: ['', Validators.required],
     });
 
@@ -47,6 +47,7 @@ export class FormLlamadoComponent implements OnInit {
     this.escucharCambios();
   }
 
+  //Carga el llamado según el ID
   async cargarLlamado() {
     try {
       const llamados = await this.llamadosService.obtenerTodosLosLlamados();
@@ -105,7 +106,6 @@ export class FormLlamadoComponent implements OnInit {
     this.form.get('asignatura')?.reset('');
   }
 
-
   //Busca la materia según el código ingresado
   buscarMateria(codigo: string) {
     const carreraSeleccionada = Number(this.form.get('carrera')?.value);
@@ -134,11 +134,12 @@ export class FormLlamadoComponent implements OnInit {
     return materia ? materia.id : null;
   }
 
-  //Método para validar los campos del formulario
+  //Método para cargar el formulario
   async onSubmit() {
-    //console.log('Datos a enviar:', this.form.value);
+    console.log('Entro onSubmit');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.toastr.error('❌ Revise su formulario.', 'Error de validación');
       return;
     }
 
@@ -154,27 +155,39 @@ export class FormLlamadoComponent implements OnInit {
       materia_llamado: Number(this.obtenerIdMateria()),
     };
 
+    console.log('Llamado Data:', llamadoData);
+
     try {
-      if (this.id) {
-        // Actualizar llamado existente
-        await this.llamadosService.actualizarLlamado(this.id, this.form.value);
-        this.toastr.success('✅ Llamado actualizado exitosamente', '¡Éxito!');
-      } else {
-        // Crear nuevo llamado
+      console.log('Entro onSubmit - try');
+      if (llamadoData) {
         await this.llamadosService.crearLlamado(llamadoData);
         this.toastr.success('✅ Llamado creado exitosamente', '¡Éxito!');
       }
-
       this.form.reset();
       setTimeout(() => {
         this.router.navigate(['/gestion-llamados']);
-      }, 2000);
+      }, 2000); 
     } catch (error) {
       console.error(error);
       if (error) {
         console.error('Detalles del error:', error);
       }
       this.toastr.error('❌ Error al guardar el llamado', 'Error');
+    }
+  }
+
+  soloNumeros(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  onInputChange() {
+    const porcentajeControl = this.form.get('porcentaje');
+    if (porcentajeControl) {
+      // Esto asegurará que Angular valide correctamente el campo.
+      porcentajeControl.updateValueAndValidity();
     }
   }
 }
