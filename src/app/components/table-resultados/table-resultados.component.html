@@ -1,8 +1,9 @@
-  <!-- Llamados Vencidos -->
-  <div class="card mt-5">
-    <div class="card-body">
-      <h5 class="card-title">Resultados</h5>
+<!-- Llamados Vencidos -->
+<div class="card mt-5">
+  <div class="card-body">
+    <h5 class="card-title">Resultados</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary">Orden de Mérito de llamados vencidos </h6>
+    <div class=table-responsive>
       <table class="table">
         <thead>
           <tr>
@@ -17,7 +18,7 @@
           <tr *ngIf="llamadosVencidosFiltrados.length === 0">
             <td colspan="5" class="text-center">No hay llamados vencidos</td>
           </tr>
-          
+
           <tr *ngFor="let llamado of llamadosVencidosFiltrados">
             <td>{{ llamado.nombre_materia }}</td>
             <td>{{ llamado.nombre_escuela }}</td>
@@ -37,11 +38,9 @@
             </td>
           </tr>
         </tbody>
-        
-        
+
+
       </table>
-    </div>
+    </div>>
   </div>
-
-
-
+</div>

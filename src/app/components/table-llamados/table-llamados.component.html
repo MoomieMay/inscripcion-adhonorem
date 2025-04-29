@@ -10,35 +10,37 @@
       <li>Tener aprobada la asignatura y cumplir con requisitos específicos de la asignatura según convocatoria
         publicada en portales institucionales.</li>
     </ul>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Asignatura</th>
+            <th scope="col">Escuela</th>
+            <th scope="col">Periodo</th>
+            <th scope="col">Fecha Cierre</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr *ngIf="llamadosVigentes.length === 0">
+            <td colspan="4" class="text-center">No existen llamados</td>
+          </tr>
+          <tr *ngFor="let llamado of llamadosVigentes">
+            <td>{{ llamado.nombre_materia }}</td>
+            <td>{{ llamado.nombre_escuela }}</td>
+            <td>{{ llamado.periodo }}</td>
+            <td>{{ llamado.cierre_llamado }}</td>
+            <td>
+              <a class="btn btn-uaco btn-sm" [routerLink]="['/form-inscripcion']"
+                [queryParams]="{ asignatura: llamado.nombre_materia, id: llamado.id }">
+                <i class="fa-solid fa-file-pen me-1"></i> Inscribirme
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Asignatura</th>
-          <th scope="col">Escuela</th>
-          <th scope="col">Periodo</th>
-          <th scope="col">Fecha Cierre</th>
-          <th scope="col">Acción</th>
-        </tr>
-      </thead>
-      <tbody class="table-group-divider">
-        <tr *ngIf="llamadosVigentes.length === 0">
-          <td colspan="4" class="text-center">No existen llamados</td>
-        </tr>
-        <tr *ngFor="let llamado of llamadosVigentes">
-          <td>{{ llamado.nombre_materia }}</td>
-          <td>{{ llamado.nombre_escuela }}</td>
-          <td>{{ llamado.periodo }}</td>
-          <td>{{ llamado.cierre_llamado }}</td>
-          <td>
-            <a class="btn btn-uaco btn-sm" [routerLink]="['/form-inscripcion']"
-              [queryParams]="{ asignatura: llamado.nombre_materia, id: llamado.id }">
-              <i class="fa-solid fa-file-pen me-1"></i> Inscribirme
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>
 
@@ -46,26 +48,28 @@
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Llamados Vencidos</h5>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Asignatura</th>
-          <th>Escuela</th>
-          <th>Periodo</th>
-          <th>Fecha Cierre</th>
-        </tr>
-      </thead>
-      <tbody class="table-group-divider">
-        <tr *ngIf="llamadosVencidos.length === 0">
-          <td colspan="4" class="text-center">No hay llamados vencidos</td>
-        </tr>
-        <tr *ngFor="let llamado of llamadosVencidos">
-          <td>{{ llamado.nombre_materia }}</td>
-          <td>{{ llamado.nombre_escuela }}</td>
-          <td>{{ llamado.periodo }}</td>
-          <td>{{ llamado.cierre_llamado }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Asignatura</th>
+            <th>Escuela</th>
+            <th>Periodo</th>
+            <th>Fecha Cierre</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr *ngIf="llamadosVencidos.length === 0">
+            <td colspan="4" class="text-center">No hay llamados vencidos</td>
+          </tr>
+          <tr *ngFor="let llamado of llamadosVencidos">
+            <td>{{ llamado.nombre_materia }}</td>
+            <td>{{ llamado.nombre_escuela }}</td>
+            <td>{{ llamado.periodo }}</td>
+            <td>{{ llamado.cierre_llamado }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

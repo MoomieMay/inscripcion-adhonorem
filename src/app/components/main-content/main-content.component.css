@@ -36,7 +36,17 @@ ul li {
 
 .parallax {
     background-image: url('../../../assets/portada.png');
-    height: 300px; /* Podés ajustar la altura */
+    height: 300px;
     margin-bottom: 20px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top; 
+  }
+  
+  /* Estilo para pantallas pequeñas */
+  @media (max-width: 576px) {
+    .parallax {
+      background-position: center;
+    }
   }
   

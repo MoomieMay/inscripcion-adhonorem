@@ -1,63 +1,64 @@
 <nav class="navbar navbar-expand-lg mb-3 p-2 border-bottom">
-  <div class="container-fluid d-flex justify-content-start">
-    <a class="navbar-brand" href="#">
-      <img src="../../../assets/logo.ico" alt="Logo" height="60" class="d-inline-block align-text-top">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="../../../assets/logo.ico" alt="Logo" height="60" class="me-2">
+      <span class="fs-6 header-title mb-0">{{ texto }}</span>
     </a>
-    <p class="mb-0 fs-6 header-title"> {{texto}} </p>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
       aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <!-- Menu usuario común -->
-      <ul class="navbar-nav pe-3 position-absolute bottom-25 end-0" *ngIf="!isLoggedIn">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/llamados" routerLinkActive="active" >Llamados</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/resultados" routerLinkActive="active" >Resultados</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-right-to-bracket"></i> Ingresar
-          </a>
-          <div class="dropdown-menu">
-            <form class="px-4 py-3" (ngSubmit)="login()">
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Email" [(ngModel)]="email" name="email"
-                  required />
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" placeholder="********" [(ngModel)]="password"
-                  name="password" required />
-              </div>
-              <button type="submit" class="btn w-100">Ingresar</button>
-            </form>
-          </div>
-        </li>
-      </ul>
-      <!-- Menu usuario logueado -->
-      <ul class="navbar-nav pe-3 position-absolute bottom-25 end-0" *ngIf="isLoggedIn">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/lista-inscriptos" routerLinkActive="active">Inscripciones</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/gestion-llamados" routerLinkActive="active">Gestión de Llamados</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="logout()"> <i class="fa-solid fa-right-from-bracket me-1 icon-out"></i> Salir</a>
-        </li>
-      </ul>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <!-- Usuario no logueado -->
+        <ng-container *ngIf="!isLoggedIn">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/llamados" routerLinkActive="active">Llamados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/resultados" routerLinkActive="active">Resultados</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-right-to-bracket"></i> Ingresar
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <form class="px-4 py-3" (ngSubmit)="login()">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="Email" [(ngModel)]="email" name="email" required />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="password" placeholder="********" [(ngModel)]="password" name="password" required />
+                </div>
+                <button type="submit" class="btn w-100">Ingresar</button>
+              </form>
+            </div>
+          </li>
+        </ng-container>
 
+        <!-- Usuario logueado -->
+        <ng-container *ngIf="isLoggedIn">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/lista-inscriptos" routerLinkActive="active">Inscripciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/gestion-llamados" routerLinkActive="active">Gestión de Llamados</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="logout()"> <i class="fa-solid fa-right-from-bracket me-1 icon-out"></i> Salir</a>
+          </li>
+        </ng-container>
+      </ul>
     </div>
   </div>
 </nav>

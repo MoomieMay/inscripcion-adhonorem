@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   background-color: #FFFFFF;
+  z-index: 1030;
 }
 
 .header-title {
@@ -28,6 +29,9 @@ form .btn:hover {
   right: 0;
   left: auto;
   transform: translateX(0);
+  z-index: 1050;
+  background-color: white;
+  border: 1px solid #ddd;
 }
 
 .icon-out {
