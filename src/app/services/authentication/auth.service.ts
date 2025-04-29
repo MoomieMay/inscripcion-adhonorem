@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, map  } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private supabase: SupabaseClient;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isAuthCheckComplete = new BehaviorSubject<boolean>(false);
   private userRole: string | null = null;
 
   constructor(private router: Router) {
@@ -37,11 +38,29 @@ export class AuthService {
       this.isLoggedInSubject.next(false);
       this.currentUserEmail = null;
     }
+    this.isAuthCheckComplete.next(true);
   }
 
   isLoggedIn(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }
+
+  isLoggedInAfterCheck(): Observable<boolean> {
+    return combineLatest([
+      this.isLoggedInSubject,
+      this.isAuthCheckComplete
+    ]).pipe(
+      map(([isLoggedIn, checkComplete]) => {
+        return checkComplete && isLoggedIn;
+      })
+    );
+  }
+
+  async getSession() {
+    const { data: { session }, error } = await this.supabase.auth.getSession();
+    return session;
+  }
+  
 
   async getUserRole(): Promise<string | null> {
     if (this.userRole) {
@@ -92,4 +111,6 @@ export class AuthService {
     this.userRole = null;
     this.router.navigate(['/']);
   }
+
+  
 }

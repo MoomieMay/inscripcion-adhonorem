@@ -1,15 +1,15 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/authentication/auth.service';
-import { map } from 'rxjs';
+import { from, map, switchMap } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.isLoggedIn().pipe(
-    map(isLoggedIn => {
-      if (isLoggedIn) {
+  return from(authService.getSession()).pipe(
+    map(session => {
+      if (session?.user) {
         return true;
       } else {
         return router.parseUrl('/acceso-denegado');
